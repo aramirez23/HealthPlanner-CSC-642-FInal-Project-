@@ -1,17 +1,28 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { StyleSheet, Text, View, Button } from "react-native";
+import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateAppointment from './screens/CreateAppointment';
 
 import Login from "./screens/Login";
 import CreateAccount from "./screens/CreateAccount";
 
-function HomeScreen() {
+function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Home Screen</Text>
+      <Button
+          color="#ec5990"
+          title="Create Appointment"
+          onPress={() => {
+            navigation.dispatch(
+              CommonActions.reset({
+                routes: [{ name: "Create Appointment" }],
+              })
+            );
+          }}
+        />
     </View>
   );
 }
