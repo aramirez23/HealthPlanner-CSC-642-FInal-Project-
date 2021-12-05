@@ -1,49 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-<<<<<<< HEAD
-import { StyleSheet, Text, View, Button } from "react-native";
-import { NavigationContainer, CommonActions } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CreateAppointment from './screens/CreateAppointment';
-=======
 import { StyleSheet, Text, View } from "react-native";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
->>>>>>> 81cfea0196b7e273d169c126af60d0c5eed80eae
 
 import Login from "./screens/Login";
 import CreateAccount from "./screens/CreateAccount";
+import CreateAppointmentScreen from "./screens/CreateAppointmentScreen";
 
 function HomeScreen({ navigation }) {
   return (
-<<<<<<< HEAD
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      <Button
-          color="#ec5990"
-          title="Create Appointment"
-          onPress={() => {
-            navigation.dispatch(
-              CommonActions.reset({
-                routes: [{ name: "Create Appointment" }],
-              })
-            );
-          }}
-        />
-=======
     <View style={styles.container}>
       <Text style={styles.text}>Home Screen</Text>
->>>>>>> 81cfea0196b7e273d169c126af60d0c5eed80eae
-    </View>
-  );
-}
-
-function CreateAppointmentScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Create Appointments!</Text>
     </View>
   );
 }
@@ -92,15 +62,11 @@ export default function App({ navigation }) {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Create Account" component={CreateAccount} />
-<<<<<<< HEAD
-        <Stack.Screen name="Create Appointment" component={CreateAppointment} />
-=======
         <Stack.Screen
           name="Tab Screen"
           component={TabScreen}
           options={{ headerShown: false }}
         />
->>>>>>> 81cfea0196b7e273d169c126af60d0c5eed80eae
       </Stack.Navigator>
     </NavigationContainer>
   );
