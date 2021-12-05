@@ -1,9 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { useForm, Controller } from "react-hook-form";
+import { NavigationContainer, CommonActions } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Constants from "expo-constants";
 
-export default function Login() {
+export default function Login({ navigation }) {
   const {
     register,
     setValue,
@@ -65,9 +67,18 @@ export default function Login() {
         <Button
           color="#ec5990"
           title="Log In"
-          onPress={handleSubmit(onSubmit)}
+          onPress={ () => {handleSubmit(onSubmit); navigation.dispatch(
+            CommonActions.reset({
+              routes: [
+                { name: 'Home' },
+              ],
+            })
+          );}}
         />
       </View>
+
+      <Text style={styles.text}>Have no account?</Text>
+      <Text style={styles.textButton} onPress={ () => {navigation.navigate('Create Account')}}>Create A New Account</Text>
     </View>
   );
 }
@@ -96,5 +107,13 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     borderRadius: 4,
+  },
+  text: {
+    color: "white",
+    textAlign: "center",
+  },
+  textButton: {
+    color: '#E91E63',
+    textAlign: "center",
   },
 });
