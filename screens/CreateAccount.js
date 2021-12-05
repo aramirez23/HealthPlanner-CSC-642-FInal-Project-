@@ -120,7 +120,7 @@ export default function CreateAccount({ navigation }) {
             handleSubmit(onSubmit);
             navigation.dispatch(
               CommonActions.reset({
-                routes: [{ name: "Home" }],
+                routes: [{ name: "Tab Screen" }],
               })
             );
           }}
@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingTop: Constants.statusBarHeight,
     padding: 8,
     backgroundColor: "#0e101c",
   },

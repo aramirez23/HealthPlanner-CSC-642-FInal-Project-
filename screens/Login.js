@@ -70,7 +70,7 @@ export default function Login({ navigation }) {
           onPress={ () => {handleSubmit(onSubmit); navigation.dispatch(
             CommonActions.reset({
               routes: [
-                { name: 'Home' },
+                { name: 'Tab Screen' },
               ],
             })
           );}}
@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingTop: Constants.statusBarHeight,
     padding: 8,
     backgroundColor: "#0e101c",
   },
