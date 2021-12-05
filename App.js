@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +8,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Login from "./screens/Login";
 import CreateAccount from "./screens/CreateAccount";
+import HistoryBox from "./screens/History";
+
+let p = [0,1,2,3,4,5];
 
 function HomeScreen() {
   return (
@@ -26,9 +29,29 @@ function CreateAppointmentScreen() {
 }
 
 function HistoryScreen() {
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>History!</Text>
+    <View style={styles.historyContainer}>
+      {p.map((o,index)=>(
+        <HistoryBox>
+          
+        </HistoryBox>
+        // <TouchableOpacity 
+        //   key={o}
+        //   onPress={ () => {handleSubmit(onSubmit); navigation.dispatch(
+        //     CommonActions.reset({
+        //       routes: [
+        //         { name: 'Home' },
+        //       ],
+        //     })
+        //   );}
+        // }>
+        //   <HistoryBox
+        //     key={o}>
+        //     <Text style={styles.historyText}>hello</Text>
+        //   </HistoryBox>
+        // </TouchableOpacity>
+      ))}
     </View>
   );
 }
@@ -85,6 +108,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0e101c",
+  },
+  historyContainer: {
+    //flex: 1,
+    flexDirection: 'column',
+    justifyContent:'space-around',
+    alignItems:'center',
+    backgroundColor: "#0e101c",
+  },
+  historyText:{
+    color: "black",
+    textAlign: "center",
   },
   text: {
     color: "white",
