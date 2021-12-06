@@ -6,29 +6,29 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Constants from "expo-constants";
 
 
+//need to add navigation to appointment details page
 export default function HistoryBox(props){
-
     return (
         <TouchableOpacity>
             <View style={styles.card}>
                 <View style={styles.cardContent}>
-                    {props.children}
+                    <View >
+                        {props.children}
+                    </View>
                 </View>
             </View>
         </TouchableOpacity>
-
     )
-
 }
 
 const styles = StyleSheet.create({
     card:{
         borderRadius:6,
         elevation:3,
-        backgroundColor:'#fff',
-        shadowOffset:{width:1, height:1},
-        shadowColor: '#333',
-        shadowRadius:2,
+        backgroundColor:'#1d2738',
+        shadowOffset:{width:10, height:10},
+        shadowColor: '#fff',
+        shadowRadius:5,
         marginHorizontal:4,
         marginVertical:6
     },
@@ -36,6 +36,5 @@ const styles = StyleSheet.create({
     cardContent:{
         marginHorizontal:18,
         marginVertical:19
-    }
-
+    },
 })
