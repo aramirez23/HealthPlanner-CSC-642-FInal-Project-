@@ -1,17 +1,18 @@
 import React, {useState, useCallback} from "react";
-import { StyleSheet, Text, View, TextInput, Button, Modal } from "react-native";
-import { useForm, Controller } from "react-hook-form";
+import { StyleSheet, Text, View, TextInput, Button, Modal, Alert } from "react-native";
 import Constants from "expo-constants";
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { NavigationContainer, CommonActions } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { CommonActions } from "@react-navigation/native";
+
 
 export default function CreateAppointmentScreen({navigation}) {
   const [openAppointment, setAppointment] = useState(false);
   const [openDoctors, setDoctors] = useState(false);
   const [openModality, setModality] = useState(false);
-  const [value, setValue] = useState(null);
+  const [avalue, setAValue] = useState(null);
+  const [dvalue, setDValue] = useState(null);
+  const [mvalue, setMValue] = useState(null);
 
   const [appointmentType, appointmentValue] = useState([
     {label: 'Physical Exam', value: 'physical exam'},
@@ -55,7 +56,8 @@ export default function CreateAppointmentScreen({navigation}) {
   }, []);
 
   //date/time picker
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
+  new Date()
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
@@ -80,8 +82,7 @@ export default function CreateAppointmentScreen({navigation}) {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [text, onChangeText] = React.useState("Notes");
-
+  const [text, onChangeText] = React.useState('notes');
 
   return (
     <View style={styles.container}>
@@ -94,16 +95,27 @@ export default function CreateAppointmentScreen({navigation}) {
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.modalView}>
-        <Button
-          onPress={() => {
-            setModalVisible(!modalVisible)
-              navigation.dispatch(
-                CommonActions.reset({
-                  routes: [{ name: "Tab Screen" }],
-                })
-              );
-            }}
-          title={'Confirm'}/>
+        <Text style={{ fontSize: 20 }}>Your {mvalue} {avalue} appointment with {dvalue} at {date.toString()} is ready to schedule.
+        Press confirm to schedule, or cancel to edit your appointment further.</Text>
+        <View style={styles.element}>
+          <Button
+            color="#ec5990"
+            onPress={() => {
+              setModalVisible(!modalVisible)
+                navigation.dispatch(
+                  CommonActions.reset({
+                    routes: [{ name: "Tab Screen" }],
+                  })
+                );
+              }}
+            title={'Confirm'}/>
+          </View>
+          <View style={styles.element}>
+            <Button
+            color="#ec5990"
+            onPress={() => {setModalVisible(!modalVisible)}}
+            title={'Cancel'}/>
+          </View>
         </View>
       </Modal>
       <View visible={!modalVisible}>
@@ -113,10 +125,10 @@ export default function CreateAppointmentScreen({navigation}) {
           placeholder = 'Appointment Type'
           open={openAppointment}
           onOpen={onAppointmentTypeOpen}
-          value={value}
+          value={avalue}
           items={appointmentType}
           setOpen={setAppointment}
-          setValue={setValue}
+          setValue={setAValue}
           setItems={appointmentValue}
           style={styles.element}/>
         <DropDownPicker
@@ -125,10 +137,10 @@ export default function CreateAppointmentScreen({navigation}) {
           placeholder = 'Doctor'
           open={openDoctors}
           onOpen={onDoctorsOpen}
-          value={value}
+          value={dvalue}
           items={doctors}
           setOpen={setDoctors}
-          setValue={setValue}
+          setValue={setDValue}
           setItems={doctorValue}
           style={styles.element}/>
         <DropDownPicker
@@ -137,26 +149,25 @@ export default function CreateAppointmentScreen({navigation}) {
           placeholder = 'Modality'
           open={openModality}
           onOpen={onModalityOpen}
-          value={value}
+          value={mvalue}
           items={modality}
           setOpen={setModality}
-          setValue={setValue}
+          setValue={setMValue}
           setItems={modalityValue}
           style={styles.element}/>
       <View style={styles.element} zIndex={100}>
         <Button
           onPress={showDatepicker} 
           color="#ec5990"
-          borderRadius={10}
           title="Select Date" />
       </View>
       <View style={styles.element} zIndex={100}>
         <Button
           onPress={showTimepicker}
-          borderRadius={10}
           color="#ec5990"
           title="Select Time" />
       </View>
+      <Text style={styles.label}>{date.toString()}</Text>
       <View>
         {show && (
           <DateTimePicker
@@ -171,9 +182,9 @@ export default function CreateAppointmentScreen({navigation}) {
       <View>
         <TextInput
           multiline
-          numberOfLines={15}
+          numberOfLines={13}
           onChangeText={text => onChangeText(text)}
-          value={value}
+          value={text}
           placeholder='Notes'
           textAlign={'justify'}
           textAlignVertical={'top'}
@@ -200,16 +211,23 @@ export default function CreateAppointmentScreen({navigation}) {
 const styles = StyleSheet.create({
   label: {
     color: "white",
-    margin: 20,
-    marginLeft: 0,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom:20,
+  },
+  modalButton:{
+    height: 100,
+    width: 100,
+    margin: 10,
   },
   container: {
     flex: 1,
     justifyContent: "center",
     paddingTop: Constants.statusBarHeight,
     padding: 8,
-    //backgroundColor: "#0e101c",
-    backgroundColor: 'rgba(0,0,0,.6)',
+    backgroundColor: "#0e101c",
+    //backgroundColor: 'rgba(0,0,0,.6)',
   },
   input: {
     backgroundColor: "white",
