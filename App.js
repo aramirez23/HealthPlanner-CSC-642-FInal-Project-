@@ -11,6 +11,8 @@ import CreateAccount from "./screens/CreateAccount";
 import CreateAppointmentScreen from "./screens/CreateAppointmentScreen";
 import HistoryBox from "./screens/History";
 import AppointmentsBox from "./screens/FutureAppointments";
+
+
 const futureData = [
   { id:1,
     appointmentType:'Physical Exam',
@@ -42,38 +44,6 @@ const futureData = [
   },
 
 ];
-
-
-function HomeScreen({ navigation }) {
-  return (
-    <View style={styles.appointmentContainer}>
-      <FlatList
-        data={futureData}
-        renderItem={({item})=>(
-          <AppointmentsBox>
-            <Text style={styles.text}>{item.appointmentType}</Text>
-            <Text style={styles.text}>{item.appointmentDate}</Text>
-            <Text style={styles.text}>{item.appointmentTime}</Text>
-            <Text style={styles.text}>{item.doctor}</Text>
-            <Text style={styles.text}>Modality: {item.modality}</Text>
-          </AppointmentsBox>
-        )}
-        keyExtractor={item => item.id}//id for props
-      />
-    </View>
-  );
-}
-
-
-function CreateAppointmentScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Create Appointments!</Text>
-    </View>
-  );
-}
-
-
 //test data
 const DATA = [
   { id:1,
@@ -106,6 +76,27 @@ const DATA = [
   },
 
 ];
+
+
+function HomeScreen({ navigation }) {
+  return (
+    <View style={styles.appointmentContainer}>
+      <FlatList
+        data={futureData}
+        renderItem={({item})=>(
+          <AppointmentsBox>
+            <Text style={styles.text}>{item.appointmentType}</Text>
+            <Text style={styles.text}>{item.appointmentDate}</Text>
+            <Text style={styles.text}>{item.appointmentTime}</Text>
+            <Text style={styles.text}>{item.doctor}</Text>
+            <Text style={styles.text}>Modality: {item.modality}</Text>
+          </AppointmentsBox>
+        )}
+        keyExtractor={item => item.id}//id for props
+      />
+    </View>
+  );
+}
 
 function HistoryScreen() {
   //flatlist need list with item and id
