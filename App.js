@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Login from "./screens/Login";
 import CreateAccount from "./screens/CreateAccount";
+import CreateAppointmentScreen from "./screens/CreateAppointmentScreen";
 import HistoryBox from "./screens/History";
 import AppointmentsBox from "./screens/FutureAppointments";
 const futureData = [
@@ -42,7 +43,8 @@ const futureData = [
 
 ];
 
-function HomeScreen() {
+
+function HomeScreen({ navigation }) {
   return (
     <View style={styles.appointmentContainer}>
       <FlatList
@@ -61,6 +63,7 @@ function HomeScreen() {
     </View>
   );
 }
+
 
 function CreateAppointmentScreen() {
   return (
@@ -103,7 +106,6 @@ const DATA = [
   },
 
 ];
-
 
 function HistoryScreen() {
   //flatlist need list with item and id
