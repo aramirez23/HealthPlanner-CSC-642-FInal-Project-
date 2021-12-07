@@ -182,7 +182,7 @@ export default function CreateAppointmentScreen({navigation}) {
       <View>
         <TextInput
           multiline
-          numberOfLines={13}
+          numberOfLines={5}
           onChangeText={text => onChangeText(text)}
           value={text}
           placeholder='Notes'
