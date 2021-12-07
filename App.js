@@ -9,12 +9,55 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Login from "./screens/Login";
 import CreateAccount from "./screens/CreateAccount";
 import HistoryBox from "./screens/History";
+import AppointmentsBox from "./screens/FutureAppointments";
+const futureData = [
+  { id:1,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/19/2021',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
+  { id:2,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/19/2021',
+    appointmentTime:'10:20 PM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
+  { id:3,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/19/2022',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
+  { id:4,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/19/2121',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
 
+];
 
 function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
+    <View style={styles.appointmentContainer}>
+      <FlatList
+        data={futureData}
+        renderItem={({item})=>(
+          <AppointmentsBox>
+            <Text style={styles.text}>{item.appointmentType}</Text>
+            <Text style={styles.text}>{item.appointmentDate}</Text>
+            <Text style={styles.text}>{item.appointmentTime}</Text>
+            <Text style={styles.text}>{item.doctor}</Text>
+            <Text style={styles.text}>Modality: {item.modality}</Text>
+          </AppointmentsBox>
+        )}
+        keyExtractor={item => item.id}//id for props
+      />
     </View>
   );
 }
@@ -65,7 +108,7 @@ const DATA = [
 function HistoryScreen() {
   //flatlist need list with item and id
   return (
-    <View style={styles.historyContainer}>
+    <View style={styles.appointmentContainer}>
       <FlatList
         data={DATA}
         renderItem={({item})=>(
@@ -137,7 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#0e101c",
   },
-  historyContainer: {
+  appointmentContainer: {
     flex: 1,
     flexDirection: 'row',
     padding:30,
