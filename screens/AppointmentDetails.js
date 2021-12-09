@@ -9,22 +9,16 @@ import Constants from "expo-constants";
 
 //need to add navigation to appointment details page
 
-
-export default function AppointmentsBox(props){
+export default function AppointmentDetails({ route, navigation }){
+    const { item } = route.params;
     return (
-        <TouchableOpacity onPress={() => {
-                CommonActions.reset({
-                  routes: [{ name: "Create Account" }],
-                })
-            }}>
-            <View style={styles.card}>
-                <View style={styles.cardContent}>
-                    <View style = {styles.text}>
-                        {props.children}
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
+        <View>
+            <Text style={styles.text}>{item.appointmentType}</Text>
+            <Text style={styles.text}>{item.appointmentDate}</Text>
+            <Text style={styles.text}>{item.appointmentTime}</Text>
+            <Text style={styles.text}>{item.doctor}</Text>
+            <Text style={styles.text}>Modality: {item.modality}</Text>
+        </View>
     )
 }
 
@@ -39,7 +33,9 @@ const styles = StyleSheet.create({
         marginHorizontal:4,
         marginVertical:6
     },
-
+    text:{
+        color:'white'
+    },
     cardContent:{
         marginHorizontal:18,
         marginVertical:19

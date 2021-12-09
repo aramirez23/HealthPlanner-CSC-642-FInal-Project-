@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { FlatList, StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
-import { DarkTheme, NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -11,6 +11,7 @@ import CreateAccount from "./screens/CreateAccount";
 import CreateAppointmentScreen from "./screens/CreateAppointmentScreen";
 import HistoryBox from "./screens/History";
 import AppointmentsBox from "./screens/FutureAppointments";
+import AppointmentDetails from "./screens/AppointmentDetails";
 
 
 const futureData = [
@@ -22,24 +23,24 @@ const futureData = [
     modality:'In Person',
   },
   { id:2,
-    appointmentType:'Physical Exam',
-    appointmentDate:' 12/19/2021',
-    appointmentTime:'10:20 PM',
+    appointmentType:'Perscription Renewall',
+    appointmentDate:' 01/12/2022',
+    appointmentTime:'3:20 PM',
     doctor:'MD Dantonio',
-    modality:'In Person',
+    modality:'Online',
   },
   { id:3,
-    appointmentType:'Physical Exam',
-    appointmentDate:' 12/19/2022',
-    appointmentTime:'10:20 AM',
-    doctor:'MD Dantonio',
+    appointmentType:'Dental Exam',
+    appointmentDate:' 01/23/2022',
+    appointmentTime:'08:45 AM',
+    doctor:'DDS Zhou',
     modality:'In Person',
   },
   { id:4,
     appointmentType:'Physical Exam',
-    appointmentDate:' 12/19/2121',
-    appointmentTime:'10:20 AM',
-    doctor:'MD Dantonio',
+    appointmentDate:' 02/05/2022',
+    appointmentTime:'11:45 AM',
+    doctor:'MD Jimenz',
     modality:'In Person',
   },
 
@@ -47,30 +48,30 @@ const futureData = [
 //test data
 const DATA = [
   { id:1,
-    appointmentType:'Physical Exam',
-    appointmentDate:' 12/06/2021',
-    appointmentTime:'10:20 AM',
-    doctor:'MD Dantonio',
+    appointmentType:'Eye Exam',
+    appointmentDate:' 12/05/2021',
+    appointmentTime:'09:00 AM',
+    doctor:'OD Hovanesian',
     modality:'In Person',
   },
   { id:2,
     appointmentType:'Physical Exam',
-    appointmentDate:' 12/06/2021',
-    appointmentTime:'10:20 AM',
+    appointmentDate:' 11/06/2021',
+    appointmentTime:'10:00 AM',
     doctor:'MD Dantonio',
     modality:'In Person',
   },
   { id:3,
-    appointmentType:'Physical Exam',
-    appointmentDate:' 12/06/2021',
-    appointmentTime:'10:20 AM',
-    doctor:'MD Dantonio',
+    appointmentType:'Physical Therapy',
+    appointmentDate:' 10/11/2021',
+    appointmentTime:'3:30 PM',
+    doctor:'Staff',
     modality:'In Person',
   },
   { id:4,
     appointmentType:'Physical Exam',
-    appointmentDate:' 12/06/2021',
-    appointmentTime:'10:20 AM',
+    appointmentDate:' 09/02/2021',
+    appointmentTime:'8:30 AM',
     doctor:'MD Dantonio',
     modality:'In Person',
   },
@@ -85,11 +86,18 @@ function HomeScreen({ navigation }) {
         data={futureData}
         renderItem={({item})=>(
           <AppointmentsBox>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('Appointment Details', {
+                itemId: 86,
+                item: item,
+              });
+            }}>
             <Text style={styles.text}>{item.appointmentType}</Text>
             <Text style={styles.text}>{item.appointmentDate}</Text>
             <Text style={styles.text}>{item.appointmentTime}</Text>
             <Text style={styles.text}>{item.doctor}</Text>
             <Text style={styles.text}>Modality: {item.modality}</Text>
+            </TouchableOpacity>
           </AppointmentsBox>
         )}
         keyExtractor={item => item.id}//id for props
@@ -106,11 +114,18 @@ function HistoryScreen() {
         data={DATA}
         renderItem={({item})=>(
           <HistoryBox>
+             <TouchableOpacity onPress={() => {
+              navigation.navigate('Appointment Details', {
+                itemId: 86,
+                item: item,
+              });
+            }}>
             <Text style={styles.text}>{item.appointmentType}</Text>
             <Text style={styles.text}>{item.appointmentDate}</Text>
             <Text style={styles.text}>{item.appointmentTime}</Text>
             <Text style={styles.text}>{item.doctor}</Text>
             <Text style={styles.text}>Modality: {item.modality}</Text>
+            </TouchableOpacity>
           </HistoryBox>
         )}
         keyExtractor={item => item.id}//id for props
@@ -161,6 +176,7 @@ export default function App({ navigation }) {
           component={TabScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="Appointment Details" component={AppointmentDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );
