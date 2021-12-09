@@ -88,7 +88,6 @@ function HomeScreen({ navigation }) {
           <AppointmentsBox>
             <TouchableOpacity onPress={() => {
               navigation.navigate('Appointment Details', {
-                itemId: 86,
                 item: item,
               });
             }}>
@@ -106,7 +105,7 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function HistoryScreen() {
+function HistoryScreen({navigation}) {
   //flatlist need list with item and id
   return (
     <View style={styles.appointmentContainer}>
@@ -116,7 +115,6 @@ function HistoryScreen() {
           <HistoryBox>
              <TouchableOpacity onPress={() => {
               navigation.navigate('Appointment Details', {
-                itemId: 86,
                 item: item,
               });
             }}>
