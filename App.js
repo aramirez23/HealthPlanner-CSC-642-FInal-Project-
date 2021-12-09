@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, {useState} from "react";
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import { FlatList, StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, Text, Touchable, TouchableOpacity, View, Button } from "react-native";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -132,7 +132,6 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function HistoryScreen() {
   //flatlist need list with item and id
   function HistoryScreen() {
     const [demoList, setdemoList] = useState([...data]);
@@ -155,7 +154,7 @@ function HistoryScreen() {
     return (
       <View style={styles.container}>
         <FlatList
-          data={demoList}
+          data={data}
           renderItem={({item})=>(
             <HistoryBox>
               <Text style={styles.text}>{item.appointmentType}</Text>
@@ -181,7 +180,6 @@ function HistoryScreen() {
       </View>
     );
   }
-}
 
 
 function TabScreen() {
