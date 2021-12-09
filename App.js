@@ -1,5 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 import { FlatList, StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -77,6 +79,38 @@ const DATA = [
 
 ];
 
+const data = [
+  { id:1,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/06/2021',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
+  { id:2,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/06/2021',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
+  { id:3,
+    appointmentType:'Mental Exam',
+    appointmentDate:' 12/06/2021',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
+  { id:4,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/06/2021',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+  },
+
+];
+
 
 function HomeScreen({ navigation }) {
   return (
@@ -100,23 +134,53 @@ function HomeScreen({ navigation }) {
 
 function HistoryScreen() {
   //flatlist need list with item and id
-  return (
-    <View style={styles.appointmentContainer}>
-      <FlatList
-        data={DATA}
-        renderItem={({item})=>(
-          <HistoryBox>
-            <Text style={styles.text}>{item.appointmentType}</Text>
-            <Text style={styles.text}>{item.appointmentDate}</Text>
-            <Text style={styles.text}>{item.appointmentTime}</Text>
-            <Text style={styles.text}>{item.doctor}</Text>
-            <Text style={styles.text}>Modality: {item.modality}</Text>
-          </HistoryBox>
-        )}
-        keyExtractor={item => item.id}//id for props
-      />
-    </View>
-  );
+  function HistoryScreen() {
+    const [demoList, setdemoList] = useState([...data]);
+    const [order, setOrder] = useState(1);
+    const sortListASC = () => {
+      demoList.sort((a, b) => {
+        return a.appointmentType - b.appointmentType;
+      });
+  
+      setdemoList([...demoList]); // update
+    };
+  
+    const sortListDES = () => {
+      demoList.sort((a, b) => {
+        return a.appointmentType - b.appointmentType;
+      });
+      setdemoList([...demoList]);
+    };
+  
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={demoList}
+          renderItem={({item})=>(
+            <HistoryBox>
+              <Text style={styles.text}>{item.appointmentType}</Text>
+              <Text style={styles.text}>{item.appointmentDate}</Text>
+              <Text style={styles.text}>{item.appointmentTime}</Text>
+              <Text style={styles.text}>{item.doctor}</Text>
+              <Text style={styles.text}>Modality: {item.modality}</Text>
+            </HistoryBox>
+          )}
+          keyExtractor={item => item.id}//id for props
+        />
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ marginLeft: 10 }}>
+              <Button title={'ASC'} onPress={sortListASC} />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Button title={'DEC'} onPress={sortListDES} />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Button title={'Default'} onPress={() => setdemoList([...DATA])} />
+            </View>
+          </View>
+      </View>
+    );
+  }
 }
 
 
