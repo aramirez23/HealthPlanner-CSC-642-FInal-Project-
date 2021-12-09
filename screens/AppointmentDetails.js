@@ -1,6 +1,6 @@
 
-import React from "react";
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from "react-native";
+import React ,{useState, useCallback} from "react";
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { NavigationContainer, CommonActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,14 +8,52 @@ import Constants from "expo-constants";
 
 export default function AppointmentDetails({ route, navigation }){
     const { item } = route.params;
+    const [modalVisible, setModalVisible] = useState(false);
+
     return (
         <View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setModalVisible(!modalVisible);
+            }}>
+                <View style={styles.modalView}>
+                    <View style={styles.element}>
+                    <Button
+                        color="#ec5990"
+                        onPress={() => {
+                        setModalVisible(!modalVisible)
+                            navigation.dispatch(
+                            CommonActions.reset({
+                                routes: [{ name: "Tab Screen" }],
+                            })
+                            );
+                        }}
+                        title={'Confirm'}/>
+                    </View>
+                    <View style={styles.element}>
+                        <Button
+                        color="#ec5990"
+                        onPress={() => {setModalVisible(!modalVisible)}}
+                        title={'Cancel'}/>
+                    </View>
+                </View>
+            </Modal>
             <Text style={styles.text}>{item.appointmentType}</Text>
-            <Text style={styles.text}>{item.appointmentDate}</Text>
-            <Text style={styles.text}>{item.appointmentTime}</Text>
-            <Text style={styles.text}>{item.doctor}</Text>
-            <Text style={styles.text}>Modality: {item.modality}</Text>
-            <Text style={styles.text}>Notes: {item.notes}</Text>
+                <Text style={styles.text}>{item.appointmentDate}</Text>
+                <Text style={styles.text}>{item.appointmentTime}</Text>
+                <Text style={styles.text}>{item.doctor}</Text>
+                <Text style={styles.text}>Modality: {item.modality}</Text>
+                <Text style={styles.text}>Notes: {item.notes}</Text>
+                <Button
+                    color="#ec5990"
+                    title={'Share'}
+                    onPress={() => {
+                    setModalVisible(!modalVisible)
+                }}/>
         </View>
     )
 }
@@ -38,4 +76,23 @@ const styles = StyleSheet.create({
         marginHorizontal:18,
         marginVertical:19
     },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#0e101c",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      element: {
+        marginTop: 10,
+        marginBottom: 10,
+      },
 })
