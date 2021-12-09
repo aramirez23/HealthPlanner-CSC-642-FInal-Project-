@@ -11,7 +11,7 @@ import {
   View,
   Button,
 } from "react-native";
-import { DarkTheme, NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -21,74 +21,75 @@ import CreateAccount from "./screens/CreateAccount";
 import CreateAppointmentScreen from "./screens/CreateAppointmentScreen";
 import HistoryBox from "./screens/History";
 import AppointmentsBox from "./screens/FutureAppointments";
+import AppointmentDetails from "./screens/AppointmentDetails";
 
 const futureData = [
-  {
-    id: 1,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/19/2021",
-    appointmentTime: "10:20 AM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:1,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/19/2021',
+    appointmentTime:'10:20 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+    notes:'Annual Physical',
   },
-  {
-    id: 2,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/19/2021",
-    appointmentTime: "10:20 PM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:2,
+    appointmentType:'Perscription Renewall',
+    appointmentDate:' 12/12/2021',
+    appointmentTime:'3:20 PM',
+    doctor:'MD Dantonio',
+    modality:'Online',
+    notes:'Albuterol refill',
   },
-  {
-    id: 3,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/19/2022",
-    appointmentTime: "10:20 AM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:3,
+    appointmentType:'Dental Exam',
+    appointmentDate:' 12/23/2021',
+    appointmentTime:'08:45 AM',
+    doctor:'DDS Zhou',
+    modality:'In Person',
+    notes:'Pain in molars, explorative exam. Hopefully no root canal',
   },
-  {
-    id: 4,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/19/2121",
-    appointmentTime: "10:20 AM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:4,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 12/26/2021',
+    appointmentTime:'11:45 AM',
+    doctor:'MD Jimenz',
+    modality:'In Person',
+    notes:'Mid year check in, better safe than sorry',
   },
 ];
 //test data
 const DATA = [
-  {
-    id: 1,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/06/2021",
-    appointmentTime: "10:20 AM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:1,
+    appointmentType:'Eye Exam',
+    appointmentDate:' 03/05/2021',
+    appointmentTime:'09:00 AM',
+    doctor:'OD Hovanesian',
+    modality:'In Person',
+    notes:'Check in for Sciatica, need to get reference for surgery',
   },
-  {
-    id: 2,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/06/2021",
-    appointmentTime: "10:20 AM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:2,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 11/06/2021',
+    appointmentTime:'10:00 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+    notes:'Check in for Sciatica, need to get reference for surgery',
   },
-  {
-    id: 3,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/06/2021",
-    appointmentTime: "10:20 AM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:3,
+    appointmentType:'Physical Therapy',
+    appointmentDate:' 10/11/2021',
+    appointmentTime:'3:30 PM',
+    doctor:'Staff',
+    modality:'In Person',
+    notes:'Sciatica therapy, first session.',
   },
-  {
-    id: 4,
-    appointmentType: "Physical Exam",
-    appointmentDate: " 12/06/2021",
-    appointmentTime: "10:20 AM",
-    doctor: "MD Dantonio",
-    modality: "In Person",
+  { id:4,
+    appointmentType:'Physical Exam',
+    appointmentDate:' 05/05/2021',
+    appointmentTime:'8:30 AM',
+    doctor:'MD Dantonio',
+    modality:'In Person',
+    notes:'Annual Physical, bring up knee problems',
   },
 ];
 
@@ -104,7 +105,7 @@ function HomeScreen({ navigation }) {
         appointmentType: "appointmentType",
       };
       const sortProperty = types[type];
-      const sorted = [...DATA].sort(
+      const sorted = [...futureData].sort(
         (a, b) => a[sortProperty] > b[sortProperty] ? 1 : -1
       );
       setdemoList(sorted);
@@ -119,14 +120,20 @@ function HomeScreen({ navigation }) {
     <View style={styles.appointmentContainer}>
       <FlatList
         data={demoList}
-        renderItem={({ item }) => (
-          <HistoryBox>
+        renderItem={({item})=>(
+          <AppointmentsBox>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('Appointment Details', {
+                item: item,
+              });
+            }}>
             <Text style={styles.text}>{item.appointmentType}</Text>
             <Text style={styles.text}>{item.appointmentDate}</Text>
             <Text style={styles.text}>{item.appointmentTime}</Text>
             <Text style={styles.text}>{item.doctor}</Text>
             <Text style={styles.text}>Modality: {item.modality}</Text>
-          </HistoryBox>
+            </TouchableOpacity>
+          </AppointmentsBox>
         )}
         keyExtractor={(item) => item.id} //id for props
         extraData={sortType}
@@ -135,6 +142,7 @@ function HomeScreen({ navigation }) {
         <View style={{flex: 1, paddingLeft: 10}}>
           <Button
             title={"date"}
+            color="#ec5990"
             onPress={() => {
               changeSortType("appointmentDate");
             }}
@@ -143,6 +151,7 @@ function HomeScreen({ navigation }) {
         <View style={{flex: 1, paddingLeft: 10}}>
           <Button
             title={"id"}
+            color="#ec5990"
             onPress={() => {
               changeSortType("id");
             }}
@@ -151,6 +160,7 @@ function HomeScreen({ navigation }) {
         <View style={{flex: 1, paddingLeft: 10}}>
           <Button
             title={"abc"}
+            color="#ec5990"
             onPress={() => {
               changeSortType("appointmentType");
             }}
@@ -162,7 +172,7 @@ function HomeScreen({ navigation }) {
 }
 
 //flatlist need list with item and id
-function HistoryScreen() {
+function HistoryScreen({ navigation }) {
   const [demoList, setdemoList] = useState([...DATA]);
   const [sortType, setSortType] = useState("id");
 
@@ -191,11 +201,17 @@ function HistoryScreen() {
         data={demoList}
         renderItem={({ item }) => (
           <HistoryBox>
+             <TouchableOpacity onPress={() => {
+              navigation.navigate('Appointment Details', {
+                item: item,
+              });
+            }}>
             <Text style={styles.text}>{item.appointmentType}</Text>
             <Text style={styles.text}>{item.appointmentDate}</Text>
             <Text style={styles.text}>{item.appointmentTime}</Text>
             <Text style={styles.text}>{item.doctor}</Text>
             <Text style={styles.text}>Modality: {item.modality}</Text>
+            </TouchableOpacity>
           </HistoryBox>
         )}
         keyExtractor={(item) => item.id} //id for props
@@ -205,6 +221,7 @@ function HistoryScreen() {
         <View style={{flex: 1, paddingLeft: 10}}>
           <Button
             title={"date"}
+            color="#ec5990"
             onPress={() => {
               changeSortType("appointmentDate");
             }}
@@ -213,6 +230,7 @@ function HistoryScreen() {
         <View style={{flex: 1, paddingLeft: 10}}>
           <Button
             title={"id"}
+            color="#ec5990"
             onPress={() => {
               changeSortType("id");
             }}
@@ -221,6 +239,7 @@ function HistoryScreen() {
         <View style={{flex: 1, paddingLeft: 10}}>
           <Button
             title={"abc"}
+            color="#ec5990"
             onPress={() => {
               changeSortType("appointmentType");
             }}
@@ -295,6 +314,7 @@ export default function App({ navigation }) {
           component={TabScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="Appointment Details" component={AppointmentDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -8,9 +8,15 @@ import Constants from "expo-constants";
 
 
 //need to add navigation to appointment details page
+
+
 export default function AppointmentsBox(props){
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+                CommonActions.reset({
+                  routes: [{ name: "Create Account" }],
+                })
+            }}>
             <View style={styles.card}>
                 <View style={styles.cardContent}>
                     <View style = {styles.text}>

@@ -9,15 +9,19 @@ import Constants from "expo-constants";
 //need to add navigation to appointment details page
 export default function HistoryBox(props){
     return (
-        <TouchableOpacity>
-            <View style={styles.card}>
-                <View style={styles.cardContent}>
-                    <View >
-                        {props.children}
-                    </View>
+        <TouchableOpacity onPress={() => {
+            CommonActions.reset({
+              routes: [{ name: "Create Account" }],
+            })
+        }}>
+        <View style={styles.card}>
+            <View style={styles.cardContent}>
+                <View style = {styles.text}>
+                    {props.children}
                 </View>
             </View>
-        </TouchableOpacity>
+        </View>
+    </TouchableOpacity>
     )
 }
 
