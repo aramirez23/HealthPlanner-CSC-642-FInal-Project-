@@ -6,9 +6,6 @@ import { NavigationContainer, CommonActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Constants from "expo-constants";
 
-
-//need to add navigation to appointment details page
-
 export default function AppointmentDetails({ route, navigation }){
     const { item } = route.params;
     return (
@@ -18,6 +15,7 @@ export default function AppointmentDetails({ route, navigation }){
             <Text style={styles.text}>{item.appointmentTime}</Text>
             <Text style={styles.text}>{item.doctor}</Text>
             <Text style={styles.text}>Modality: {item.modality}</Text>
+            <Text style={styles.text}>Notes: {item.notes}</Text>
         </View>
     )
 }
