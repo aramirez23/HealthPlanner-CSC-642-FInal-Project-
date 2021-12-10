@@ -1,15 +1,90 @@
 
-import React ,{useState, useCallback} from "react";
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal, Alert } from "react-native";
+import React ,{useState, useCallback, useRef, useEffect} from "react";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal, Alert, Platform, } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { NavigationContainer, CommonActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Constants from "expo-constants";
 
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+  
+  async function schedulePushNotification() {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Health-Planner ",
+        body: 'You have an appointment scheduled for tomorrow',
+        data: { data: 'goes here' },
+      },
+      trigger: { seconds: 2 }
+    //   trigger: { hour: 21,
+    //     minute: 0, repeats: true},
+    });
+  }
+  
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }
+
 export default function AppointmentDetails({ route, navigation }){
     const { item } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
 
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
+    useEffect(() => {
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        setNotification(notification);
+        });
+
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response);
+        });
+
+        return () => {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+        };
+    }, []);
     return (
         <View>
             <Modal
@@ -54,6 +129,8 @@ export default function AppointmentDetails({ route, navigation }){
                     onPress={() => {
                     setModalVisible(!modalVisible)
                 }}/>
+                <Button title="Press to schedule a notification" onPress={async () => {await schedulePushNotification();}}
+      />
         </View>
     )
 }
