@@ -26,7 +26,13 @@ Notifications.setNotificationHandler({
   }),
 });
 
-async function schedulePushNotification(modality, appointmentType, appointmentDate, appointmentTime, doctor) {
+async function schedulePushNotification(
+  modality,
+  appointmentType,
+  appointmentDate,
+  appointmentTime,
+  doctor
+) {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "Health-Planner ",
@@ -167,19 +173,30 @@ export default function AppointmentDetails({ route, navigation }) {
       <Text style={styles.text}>{item.doctor}</Text>
       <Text style={styles.text}>Modality: {item.modality}</Text>
       <Text style={styles.text}>Notes: {item.notes}</Text>
-      <Button
-        color="#ec5990"
-        title={"Share"}
-        onPress={() => {
-          setModalVisible(!modalVisible);
-        }}
-      />
-      <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification(item.modality, item.appointmentType, item.appointmentDate, item.appointmentTime, item.doctor);
-        }}
-      />
+      <View style={styles.element}>
+        <Button
+          color="#ec5990"
+          title={"Share"}
+          onPress={() => {
+            setModalVisible(!modalVisible);
+          }}
+        />
+      </View>
+      <View style={styles.element}>
+        <Button
+          color="#ec5990"
+          title="Press to schedule a notification"
+          onPress={async () => {
+            await schedulePushNotification(
+              item.modality,
+              item.appointmentType,
+              item.appointmentDate,
+              item.appointmentTime,
+              item.doctor
+            );
+          }}
+        />
+      </View>
     </View>
   );
 }
