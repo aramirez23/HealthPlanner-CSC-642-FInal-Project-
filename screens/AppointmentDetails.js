@@ -20,7 +20,7 @@ Notifications.setNotificationHandler({
     await Notifications.scheduleNotificationAsync({
       content: {
         title: "Health-Planner ",
-        body: 'You have an in person Eye Exam scheduled for 03/05/2021 at 09:00 AM',
+        body: 'You have an in person Physical Exam scheduled for 12/19/2021 at 10:20 AM with MD Dantonio',
         data: { data: 'goes here' },
       },
       trigger: { seconds: 2 }
