@@ -86,7 +86,7 @@ export default function AppointmentDetails({ route, navigation }){
         };
     }, []);
     return (
-        <View>
+        <View style={styles.center}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -117,9 +117,9 @@ export default function AppointmentDetails({ route, navigation }){
                     </View>
                 </View>
             </Modal>
-            <Text style={styles.text}>{item.appointmentType}</Text>
-                <Text style={styles.text}>{item.appointmentDate}</Text>
-                <Text style={styles.text}>{item.appointmentTime}</Text>
+            <Text style={styles.textBold}>{item.appointmentType}</Text>
+                <Text style={styles.textBold}>{item.appointmentDate}</Text>
+                <Text style={styles.textBold}>{item.appointmentTime}{"\n"}</Text>
                 <Text style={styles.text}>{item.doctor}</Text>
                 <Text style={styles.text}>Modality: {item.modality}</Text>
                 <Text style={styles.text}>Notes: {item.notes}</Text>
@@ -149,7 +149,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    alignItems: 'center'
+    alignItems: 'center',
+    fontSize: 18,
+    paddingBottom: 10,
+  },
+  textBold: {
+    color: "white",
+    alignItems: 'center',
+    fontSize: 18,
+    paddingBottom: 10,
+    fontWeight: "bold",
   },
   cardContent: {
     marginHorizontal: 18,

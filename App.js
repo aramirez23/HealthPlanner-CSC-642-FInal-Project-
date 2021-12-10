@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
   Button,
+  LogBox,
 } from "react-native";
 import { DarkTheme, NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -304,6 +305,8 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App({ navigation }) {
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();//Ignore all log notifications
   return (
     <NavigationContainer theme={DarkTheme}>
       <Stack.Navigator initialRouteName="Login">
