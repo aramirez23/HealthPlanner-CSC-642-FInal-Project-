@@ -1,137 +1,186 @@
-
-import React ,{useState, useCallback, useRef, useEffect} from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Modal, Alert, Platform, } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  Modal,
+  Alert,
+  Platform,
+  Share,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
 
 Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
-  });
-  
-  async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Health-Planner ",
-        body: 'You have an in person Physical Exam scheduled for 12/19/2021 at 10:20 AM with MD Dantonio',
-        data: { data: 'goes here' },
-      },
-      trigger: { seconds: 2 }
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+async function schedulePushNotification(modality, appointmentType, appointmentDate, appointmentTime, doctor) {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Health-Planner ",
+      body: `You have an ${modality} ${appointmentType} scheduled for${appointmentDate} at ${appointmentTime} with ${doctor}`,
+      data: { data: "goes here" },
+    },
+    trigger: { seconds: 2 },
     //   trigger: { hour: 21,
     //     minute: 0, repeats: true},
+  });
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
     });
   }
-  
-  async function registerForPushNotificationsAsync() {
-    let token;
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-  
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
+
+  return token;
+}
+
+export default function AppointmentDetails({ route, navigation }) {
+  const { item } = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  const onShare = async (text) => {
+    try {
+      const result = await Share.share({
+        message: text,
       });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+        }
+      } else if (result.action === Share.dismissedAction) {
+      }
+    } catch (error) {
+      alert(error.message);
     }
-  
-    return token;
-  }
+  };
 
-export default function AppointmentDetails({ route, navigation }){
-    const { item } = route.params;
-    const [modalVisible, setModalVisible] = useState(false);
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
 
-    const [expoPushToken, setExpoPushToken] = useState('');
-    const [notification, setNotification] = useState(false);
-    const notificationListener = useRef();
-    const responseListener = useRef();
-
-    useEffect(() => {
-        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
-        });
+      });
 
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
-        });
+      });
 
-        return () => {
-        Notifications.removeNotificationSubscription(notificationListener.current);
-        Notifications.removeNotificationSubscription(responseListener.current);
-        };
-    }, []);
-    return (
-        <View style={styles.center}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+  return (
+    <View style={styles.center}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <View style={styles.element}>
+            <Button
+              color="#ec5990"
+              onPress={() => {
                 setModalVisible(!modalVisible);
-            }}>
-                <View style={styles.modalView}>
-                    <View style={styles.element}>
-                    <Button
-                        color="#ec5990"
-                        onPress={() => {
-                        setModalVisible(!modalVisible)
-                            navigation.dispatch(
-                            CommonActions.reset({
-                                routes: [{ name: "Tab Screen" }],
-                            })
-                            );
-                        }}
-                        title={'Confirm'}/>
-                    </View>
-                    <View style={styles.element}>
-                        <Button
-                        color="#ec5990"
-                        onPress={() => {setModalVisible(!modalVisible)}}
-                        title={'Cancel'}/>
-                    </View>
-                </View>
-            </Modal>
-            <Text style={styles.textBold}>{item.appointmentType}</Text>
-                <Text style={styles.textBold}>{item.appointmentDate}</Text>
-                <Text style={styles.textBold}>{item.appointmentTime}{"\n"}</Text>
-                <Text style={styles.text}>{item.doctor}</Text>
-                <Text style={styles.text}>Modality: {item.modality}</Text>
-                <Text style={styles.text}>Notes: {item.notes}</Text>
-                <Button
-                    color="#ec5990"
-                    title={'Share'}
-                    onPress={() => {
-                    setModalVisible(!modalVisible)
-                }}/>
-                <Button title="Press to schedule a notification" onPress={async () => {await schedulePushNotification();}}
-      />
+                onShare(
+                  `${item.appointmentType}\n${item.appointmentDate}\n${item.appointmentTime}\n${item.doctor}\n${item.modality}\n${item.notes}`
+                );
+                navigation.dispatch(
+                  CommonActions.reset({
+                    routes: [{ name: "Tab Screen" }],
+                  })
+                );
+              }}
+              title={"Confirm"}
+            />
+          </View>
+          <View style={styles.element}>
+            <Button
+              color="#ec5990"
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}
+              title={"Cancel"}
+            />
+          </View>
         </View>
+      </Modal>
+      <Text style={styles.textBold}>{item.appointmentType}</Text>
+      <Text style={styles.textBold}>{item.appointmentDate}</Text>
+      <Text style={styles.textBold}>
+        {item.appointmentTime}
+        {"\n"}
+      </Text>
+      <Text style={styles.text}>{item.doctor}</Text>
+      <Text style={styles.text}>Modality: {item.modality}</Text>
+      <Text style={styles.text}>Notes: {item.notes}</Text>
+      <Button
+        color="#ec5990"
+        title={"Share"}
+        onPress={() => {
+          setModalVisible(!modalVisible);
+        }}
+      />
+      <Button
+        title="Press to schedule a notification"
+        onPress={async () => {
+          await schedulePushNotification(item.modality, item.appointmentType, item.appointmentDate, item.appointmentTime, item.doctor);
+        }}
+      />
+    </View>
   );
 }
 
@@ -145,17 +194,17 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     marginHorizontal: 4,
     marginVertical: 6,
-    justifyContent:'center',
+    justifyContent: "center",
   },
   text: {
     color: "white",
-    alignItems: 'center',
+    alignItems: "center",
     fontSize: 18,
     paddingBottom: 10,
   },
   textBold: {
     color: "white",
-    alignItems: 'center',
+    alignItems: "center",
     fontSize: 18,
     paddingBottom: 10,
     fontWeight: "bold",
@@ -163,7 +212,7 @@ const styles = StyleSheet.create({
   cardContent: {
     marginHorizontal: 18,
     marginVertical: 19,
-    justifyContent:'center'
+    justifyContent: "center",
   },
   modalView: {
     margin: 20,
@@ -175,7 +224,7 @@ const styles = StyleSheet.create({
     shadowOffset: {
       width: 0,
       height: 2,
-      justifyContent:'center',
+      justifyContent: "center",
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -186,8 +235,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   center: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    justifyContent: 'center'
-  }
+    justifyContent: "center",
+  },
 });
